@@ -1,13 +1,13 @@
 package com.course.springframework.services.jpa;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 
 import com.course.springframework.persistance.model.Author;
 import com.course.springframework.persistance.repositories.AuthorRepository;
 import com.course.springframework.services.AuthorService;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class AuthorJpaService implements AuthorService {
@@ -19,30 +19,27 @@ public class AuthorJpaService implements AuthorService {
 	}
 
 	@Override
-	public Set<Author> findAll() {
-		
-		Set<Author> authors = new HashSet<>();
-		authorRepository.findAll().forEach(authors::add);
-		return authors;
+	public Flux<Author> findAll() {
+		return authorRepository.findAll();
 	}
 
 	@Override
-	public Author findById(String id) {
-		return authorRepository.findById(id).orElse(null);
+	public Mono<Author> findById(String id) {
+		return authorRepository.findById(id).or(null);
 	}
 
 	@Override
-	public Author save(Author object) {
+	public Mono<Author> save(Author object) {
 		return authorRepository.save(object);
 	}
 
 	@Override
-	public void delete(Author object) {
-		authorRepository.delete(object);
+	public Mono<Void> delete(Author object) {
+		return authorRepository.delete(object);
 	}
 
 	@Override
-	public void deleteById(String id) {
-		authorRepository.deleteById(id);
+	public Mono<Void> deleteById(String id) {
+		return authorRepository.deleteById(id);
 	}
 }

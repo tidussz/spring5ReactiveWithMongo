@@ -1,12 +1,7 @@
 package com.course.springframework.services.jpa;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import com.course.springframework.persistance.model.Author;
 import com.course.springframework.persistance.repositories.AuthorRepository;
 import com.course.springframework.services.AuthorService;
+
+import reactor.core.publisher.Flux;
 
 class AuthorJpaServiceTest {
 	
@@ -40,16 +37,14 @@ class AuthorJpaServiceTest {
 
 	@Test
 	void testFindAll() {
-		Author author = new Author("", null, null, null); // TODO
-		Set<Author> authorsData = new HashSet<>();
-		authorsData.add(author);
+		Author author1 = new Author("12", "Name", "Surname", null); 
+		Author author2 = new Author("13", "Name2", "Surname2", null); 
+		Flux<Author> authors = Flux.just(author1, author2);
 		
-		when(authorRepository.findAll()).thenReturn(authorsData);
+		when(authorRepository.findAll()).thenReturn(authors);
 		
-		Set<Author> authors = authorService.findAll();
-		
-		assertEquals(authors.size(), 1);
-		verify(authorRepository, times(1)).findAll();
+		Flux<Author> authorsFlux = authorService.findAll();
+		assertEquals(authorsFlux, authors);
 	}
 
 }

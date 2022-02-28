@@ -1,13 +1,13 @@
 package com.course.springframework.services.jpa;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 
 import com.course.springframework.persistance.model.Book;
 import com.course.springframework.persistance.repositories.BookRepository;
 import com.course.springframework.services.BookService;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class BookJpaService implements BookService {
@@ -19,35 +19,32 @@ public class BookJpaService implements BookService {
 	}
 
 	@Override
-	public Set<Book> findAll() {
-		
-		Set<Book> books = new HashSet<>();
-		bookRepository.findAll().forEach(books::add);
-		return books;
+	public Flux<Book> findAll() {
+		return bookRepository.findAll();
 	}
 
 	@Override
-	public Book findById(String id) {
-		return bookRepository.findById(id).orElse(null);
+	public Mono<Book> findById(String id) {
+		return bookRepository.findById(id).or(null);
 	}
 
 	@Override
-	public Book save(Book object) {
+	public Mono<Book> save(Book object) {
 		return bookRepository.save(object);
 	}
 
 	@Override
-	public void delete(Book object) {
-		bookRepository.delete(object);
+	public Mono<Void> delete(Book object) {
+		return bookRepository.delete(object);
 	}
 
 	@Override
-	public void deleteById(String id) {
-		bookRepository.deleteById(id);
+	public Mono<Void> deleteById(String id) {
+		return bookRepository.deleteById(id);
 	}
 
 	@Override
-	public Set<Book> findByAuthorId(String authorId) {
+	public Flux<Book> findByAuthorId(String authorId) {
 		return bookRepository.findByAuthorId(authorId);
 	}
 }
