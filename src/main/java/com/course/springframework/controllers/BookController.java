@@ -1,5 +1,6 @@
 package com.course.springframework.controllers;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ public class BookController {
 		this.bookService = bookService;
 	}
 
-	@GetMapping("/book/list")
+	@GetMapping(value="/book/list", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public String authorList(@RequestParam(value="author", required=false) String author,
 			Model model) {
 		
